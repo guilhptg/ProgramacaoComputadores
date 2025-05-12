@@ -58,7 +58,7 @@ while True:
         while not idade.isdigit() and tentativas < 3:
             idade = str(input('Digite sua idade: ' if tentativas == 0 else f'\nTentativa {tentativas} !!\n \nDigite sua idade: ')).strip().lower()
             if idade.isdigit():
-                pass
+                break
             else:
                 print('\nTentativa inválida, use apenas núnemros.')
             tentativas += 1
@@ -166,29 +166,18 @@ while True:
                 for i, curriculo in enumerate(lista_curriculos):
                     if nome_excluir in str(curriculo['nome']).lower():
                         print('\nUsuário encontrado !')
-                        deseja_excluir = str(input('\nDeseja excluir ?: '))
-                        if deseja_excluir.strip().lower().startswith('s'):
+                        deseja_excluir = str(input('\nDeseja excluir ? (S/n): '))
+                        if deseja_excluir.strip().lower().startswith('n'):
+                            break
+                        else:
                             lista_curriculos.pop(i)
                             print('\nUsuário excluído !\n')
                             break
                     else:
-                        while True:
-                            continuar_excluindo = str(input('\nNome não encontrado !!! \nContinuar? (s/N): '))
-                            if continuar_excluindo.strip().lower().startswith('s'):
-                                break
-                            else:
-                                nome_excluir = str(input('\nDigite o nome do currículo que deseja excluir: ').strip().lower())
-                                if nome_excluir == '':
-                                    nome_excluir = '--'
-
-                                for i, curriculo in enumerate(lista_curriculos):
-                                    if nome_excluir in str(curriculo['nome']).lower():
-                                        print('\nUsuário encontrado !')
-                                        deseja_excluir = str(input('Deseja excluir ?'))
-                                        if deseja_excluir.strip().lower().startswith('s'):
-                                            lista_curriculos.pop(i)
-                                            print('\nUsuário excluído !\n')
-                break
+                        print('\nNome não encontrado !!! \nRedirecionado para o menu.')
+                        break
+                            
+                            
         else:
             print('\n\nNão há curriculos cadastrados')
             
