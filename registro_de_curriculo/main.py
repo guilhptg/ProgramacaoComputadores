@@ -16,10 +16,8 @@ run on terminal
 python main.py to run aplication
 
 '''
-import openpyxl
 
 from tabulate import tabulate
-
 
 #TODO abrir arquivo .xmlx
 
@@ -51,25 +49,29 @@ while True:
         nome_completo = ''
         while nome_completo == '':
             nome_completo = str(input('\nDigite o nome completo: ').strip().title())
-            print('O nome não pode estar vazio!')
-            nome_completo = str(input('Digite o nome completo: ').strip().title())
-            break
-        
+            if nome_completo == '':
+                print('O nome não pode estar vazio!')
+                
         # Validação de idade -> Int
         idade = ''
-        tentativas = ''
+        tentativas = 0
         while not idade.isdigit() and tentativas < 3:
-            idade = str(input('Digite sua idade: ' if tentativa == 0 else f'\nTentativa {tentativa + 1} !!\n \nDigite sua idade: ')).strip().lower()
+            idade = str(input('Digite sua idade: ' if tentativas == 0 else f'\nTentativa {tentativas} !!\n \nDigite sua idade: ')).strip().lower()
             if idade.isdigit():
+                pass
+            else:
                 print('\nTentativa inválida, use apenas núnemros.')
             tentativas += 1
         if not idade.isdigit():
             print('Falha no registro. Voltando ao menu principal. ')
+            continue
 
+        # Formação acadêmica 
         formacao_academica = str(input('Digite sua formação acadêmica: ')).strip().title()
         if formacao_academica == '':
             formacao_academica = '--'
 
+        # Experiência profissional
         experiencia_profissional = str(input('Digite sua experiencia profissional: ')).strip().title()
         if experiencia_profissional == '':
             experiencia_profissional = '--'
@@ -83,13 +85,10 @@ while True:
 
         print('\nConfira se seus dados estão corretos\n')
 
-        confirmar_save = str(input('Deseja salvar ? (S/n)'))
-
+        confirmar_save = str(input('Deseja salvar ? (S/n)')).strip().lower()
         # Validação de dados
-        if confirmar_save.strip().lower().startswith('n'):
-            sair = str(input('Quer continuar ? (S/n)'))
-            if sair.strip().lower().startswith('n'):
-                break
+        if confirmar_save.startswith('n'):
+            continue
         else:
             #Registro de currículo na lista
             lista_curriculos.append(registro_completo)
@@ -149,7 +148,6 @@ while True:
     if menu_principal == '5':
         # Função Excluir currículo
         if len(lista_curriculos) > 0:
-
             # Consulta
             consultar_lista = str(input('Deseja consultar a lista ? (s/N)')).strip().lower()
             if 's' in consultar_lista:
@@ -168,10 +166,11 @@ while True:
                 for i, curriculo in enumerate(lista_curriculos):
                     if nome_excluir in str(curriculo['nome']).lower():
                         print('\nUsuário encontrado !')
-                        deseja_excluir = str(input('Deseja excluir ?'))
+                        deseja_excluir = str(input('\nDeseja excluir ?: '))
                         if deseja_excluir.strip().lower().startswith('s'):
                             lista_curriculos.pop(i)
                             print('\nUsuário excluído !\n')
+                            break
                     else:
                         while True:
                             continuar_excluindo = str(input('\nNome não encontrado !!! \nContinuar? (s/N): '))
@@ -179,6 +178,9 @@ while True:
                                 break
                             else:
                                 nome_excluir = str(input('\nDigite o nome do currículo que deseja excluir: ').strip().lower())
+                                if nome_excluir == '':
+                                    nome_excluir = '--'
+
                                 for i, curriculo in enumerate(lista_curriculos):
                                     if nome_excluir in str(curriculo['nome']).lower():
                                         print('\nUsuário encontrado !')
@@ -186,6 +188,7 @@ while True:
                                         if deseja_excluir.strip().lower().startswith('s'):
                                             lista_curriculos.pop(i)
                                             print('\nUsuário excluído !\n')
+                break
         else:
             print('\n\nNão há curriculos cadastrados')
             
