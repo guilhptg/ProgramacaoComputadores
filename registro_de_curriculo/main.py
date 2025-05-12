@@ -20,6 +20,8 @@ Funções:
 0. Sair
 
 '''
+
+
 from tabulate import tabulate
 
 
@@ -40,7 +42,7 @@ while True:
     \n
         ''')
 
-    menu_principal = str(input('Escolha alguma das funções: ')).strip().lower()
+    menu_principal = str(input('\nEscolha alguma das funções: ')).strip().lower()
 
     if menu_principal == '0':
         break
@@ -50,7 +52,7 @@ while True:
 
         # Nome - validação de vazio
         while True:
-            nome_completo = str(input('Digite o nome completo: ').strip().title())
+            nome_completo = str(input('\nDigite o nome completo: ').strip().title())
             while nome_completo == '':
                 print('O nome não pode estar vazio!')
                 nome_completo = str(input('Digite o nome completo: ').strip().title())
@@ -63,8 +65,15 @@ while True:
             idade = str(input('Digite sua idade: ' if tentativa == 0 else f'Tentativa {tentativa + 1} - Digite sua idade: ')).strip().lower()
             if idade.isdigit():
                 break
+
         formacao_academica = str(input('Digite sua formação acadêmica: ')).strip().title()
+        if formacao_academica == '':
+            formacao_academica = '--'
+
         experiencia_profissional = str(input('Digite sua experiencia profissional: ')).strip().title()
+        if experiencia_profissional == '':
+            experiencia_profissional = '--'
+
         registro_completo = {
             'nome':nome_completo, 
             'idade': idade, 
@@ -72,15 +81,15 @@ while True:
             'experiencia_profissional': experiencia_profissional
             }
 
-        print('Confira se seus dados estão corretos')
+        print('\nConfira se seus dados estão corretos')
 
-        print('\n\n\n', tabulate({
-            'nome':nome_completo, 
-            'idade': idade, 
-            'formacao_academica': formacao_academica, 
-            'experiencia_profissional': experiencia_profissional
-            },
-            headers='keys', tablefmt='grid'))
+        # print('\n\n', tabulate({
+        #     'nome':nome_completo, 
+        #     'idade': idade, 
+        #     'formacao_academica': formacao_academica, 
+        #     'experiencia_profissional': experiencia_profissional
+        #     },
+        #     headers='keys', tablefmt='grid'))
 
         confirmar_save = str(input('Deseja salvar ? (S/n)'))
         # Validação de dados
@@ -92,13 +101,15 @@ while True:
             #Registro de currículo na lista
             lista_curriculos.append(registro_completo)
 
+
     # Função Listar todos os currículos
     if menu_principal == '2':
         if len(lista_curriculos) > 0:
-            print('\n\nLista de Currículos cadastrados\n')
+            print('\n\nLista de Currículos Cadastrados\n')
             print(tabulate(lista_curriculos, headers='keys', tablefmt="grid"))
         else:
             print('\n\nNão há curriculos cadastrados')
+
 
     # Função Busca de Currículo por nome
     if menu_principal == '3':
@@ -109,6 +120,7 @@ while True:
                     print(curriculo['nome'])
                     print(f'Curriculo encontrado !')
                     print(tabulate([curriculo], headers='keys', tablefmt='grid'))
+
         else:
             print('\n\nNão há curriculos cadastrados')
 
@@ -145,6 +157,7 @@ while True:
             print('\n\nNão há curriculos cadastrados')
             
 
+    # Validação para vazio
     if menu_principal == '':
         sair = str(input('Precione 0 sair ou ENTER para continuar: '))
         if sair.strip().lower().startswith('0'):
