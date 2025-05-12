@@ -53,9 +53,11 @@ while True:
         # Nome - validação de vazio
         while True:
             nome_completo = str(input('\nDigite o nome completo: ').strip().title())
+
             while nome_completo == '':
                 print('O nome não pode estar vazio!')
                 nome_completo = str(input('Digite o nome completo: ').strip().title())
+                
                 if nome_completo:
                     break
             break
@@ -81,21 +83,14 @@ while True:
             'experiencia_profissional': experiencia_profissional
             }
 
-        print('\nConfira se seus dados estão corretos')
-
-        # print('\n\n', tabulate({
-        #     'nome':nome_completo, 
-        #     'idade': idade, 
-        #     'formacao_academica': formacao_academica, 
-        #     'experiencia_profissional': experiencia_profissional
-        #     },
-        #     headers='keys', tablefmt='grid'))
+        print('\nConfira se seus dados estão corretos\n')
 
         confirmar_save = str(input('Deseja salvar ? (S/n)'))
+
         # Validação de dados
         if confirmar_save.strip().lower().startswith('n'):
-            sair = str(input('Precione 0 sair ou ENTER para continuar'))
-            if sair.strip().lower().startswith('0'):
+            sair = str(input('Quer continuar ? (S/n)'))
+            if sair.strip().lower().startswith('n'):
                 break
         else:
             #Registro de currículo na lista
