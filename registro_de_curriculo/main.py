@@ -16,7 +16,7 @@ run on terminal
 python main.py to run aplication
 
 '''
-
+import openpyxl
 
 from tabulate import tabulate
 
@@ -46,6 +46,9 @@ while True:
     if menu_principal == '1':
 
         # Nome - validação de vazio
+
+
+        nome_completo = ''
         while nome_completo == '':
             nome_completo = str(input('\nDigite o nome completo: ').strip().title())
             print('O nome não pode estar vazio!')
@@ -53,12 +56,15 @@ while True:
             break
         
         # Validação de idade -> Int
-        while idade.isdigit() == False:
-            idade = '--'
-            for tentativa in range(2):
-                idade = str(input('Digite sua idade: ' if tentativa == 0 else f'\nTentativa {tentativa + 1} !!\n \nDigite sua idade: ')).strip().lower()
-                if idade.isdigit():
-                    continue
+        idade = ''
+        tentativas = ''
+        while not idade.isdigit() and tentativas < 3:
+            idade = str(input('Digite sua idade: ' if tentativa == 0 else f'\nTentativa {tentativa + 1} !!\n \nDigite sua idade: ')).strip().lower()
+            if idade.isdigit():
+                print('\nTentativa inválida, use apenas núnemros.')
+            tentativas += 1
+        if not idade.isdigit():
+            print('Falha no registro. Voltando ao menu principal. ')
 
         formacao_academica = str(input('Digite sua formação acadêmica: ')).strip().title()
         if formacao_academica == '':
