@@ -19,10 +19,19 @@ python main.py to run aplication
 
 from tabulate import tabulate
 
-#TODO abrir arquivo .xmlx
+#TODO abrir arquivo .xlxs
 
 # Lista para armazenar todos os currículos
 lista_curriculos = []
+
+indice = 0
+
+mapeamento_campos = {
+    'nome': 'nome',
+    'idade': 'idade',
+    'formacao': 'formacao_academica',
+    'experiencia': 'experiencia_profissional'
+}
 
 while True:
     print('''
@@ -41,11 +50,9 @@ while True:
         break
 
     # Função cadastrar
-    if menu_principal == '1':
+    elif menu_principal == '1':
 
         # Nome - validação de vazio
-
-
         nome_completo = ''
         while nome_completo == '':
             nome_completo = str(input('\nDigite o nome completo: ').strip().title())
@@ -72,11 +79,22 @@ while True:
             formacao_academica = '--'
 
         # Experiência profissional
-        experiencia_profissional = str(input('Digite sua experiencia profissional: ')).strip().title()
-        if experiencia_profissional == '':
-            experiencia_profissional = '--'
+        print('Escrva no modelo \n Cargo - Empresta \nSe desejar sair digite "fim".')
+        experiencia_profissional = []
+        while True:
+            experiencia = str(input('- ')).strip().title()
+            if experiencia.lower() == 'fim':
+                if len(experiencia_profissional) == 0:
+                    print('Você deve adicionar pelo menos uma experiência.')
+                    continue
+                break
+            elif experiencia != '':
+                experiencia_profissional.append(experiencia)
+
+        indice += 1
 
         registro_completo = {
+            'indice': indice,
             'nome':nome_completo, 
             'idade': idade, 
             'formacao_academica': formacao_academica, 
@@ -95,7 +113,7 @@ while True:
 
 
     # Função Listar todos os currículos
-    if menu_principal == '2':
+    elif menu_principal == '2':
         if len(lista_curriculos) > 0:
             print('\n\nLista de Currículos Cadastrados\n')
             print(tabulate(lista_curriculos, headers='keys', tablefmt="grid"))
@@ -104,7 +122,7 @@ while True:
 
 
     # Função Busca de Currículo por nome
-    if menu_principal == '3':
+    elif menu_principal == '3':
         if len(lista_curriculos) > 0:
             nome_busca = str(input('\nDigite o nome para busca: ')).strip().lower()
             for curriculo in lista_curriculos:
@@ -112,44 +130,61 @@ while True:
                     print(curriculo['nome'])
                     print(f'\nCurriculo encontrado !\n\n')
                     print(tabulate([curriculo], headers='keys', tablefmt='grid'))
-
         else:
             print('\n\nNão há curriculos cadastrados')
 
     # Função Atualizar currículo
-    if menu_principal == '4':
-        consultar_lista = str(input('Deseja consultar a lista ? (s/N)')).strip().lower()
-        if 's' in consultar_lista:
-            if len(lista_curriculos) > 0:
-                print('\n\nLista de Currículos Cadastrados\n')
+    elif menu_principal == '4':
+        if len(lista_curriculos) > 0:
+            consultar_lista = str(input('\nDeseja consultar a lista ? (s/N) ')).strip().lower()
+
+            if 's' in consultar_lista:
                 print(tabulate(lista_curriculos, headers='keys', tablefmt="grid"))
+
+            nome_atualizar = str(input('\nDigite o nome do curriculo que deseja atualizar: ').lower().strip())
+            if nome_atualizar:
+                for curriculo in lista_curriculos:
+                    if nome_atualizar in curriculo['nome'].lower() or nome_atualizar == str(curriculo['indice']):
+                        print('Currículo encontrado:')
+                        print(tabulate([curriculo], headers='keys', tablefmt='grid'))
+                        
+                        campo = input('Qual campo deseja atualizar? (nome / idade / formacao / experiencia): ').strip().lower()
+                        
+                        if campo in mapeamento_campos:
+                            if campo == 'experiencia':
+                                print('Digite novamente as experiências ("fim" para terminar):')
+                                nova_experiencia = []
+                                while True:
+                                    exp = str(input('- ')).strip().title()
+                                    if exp.lower() == 'fim':
+                                        if len(nova_experiencia) == 0:
+                                            print('Voce deve adicionar ao menos uma experiência.')
+                                            continue
+                                        break
+                                    elif exp != '':
+                                        nova_experiencia.append(exp)
+                                        curriculo[mapeamento_campos[campo]] = nova_experiencia
+                                print('Currículo atualizado com sucesso!')
+                            else:
+                                novo_valor = input(f'Digite o novo valor para {campo}: ')
+                                curriculo[mapeamento_campos[campo]] = novo_valor.capitalize()
+                                print('Currículo atualizado com sucesso!')
+                        
+                        else:
+                            print('Campo inválido.')
+                        break
             else:
-                print('\n\nNão há curriculos cadastrados')
-
-        nome_atualizar = str(input('\nDigite o nome do curriculo que deseja atualizar: ').lower().strip())
-        for curriculo in lista_curriculos:
-            if nome_atualizar in curriculo['nome'].lower():
-                print('Currículo encontrado:')
-                print(tabulate([curriculo], headers='keys', tablefmt='grid'))
-                
-                campo = input('Qual campo deseja atualizar? (nome / idade / formacao_academica / experiencia_profissional): ').strip().lower()
-                if campo in curriculo:
-                    novo_valor = input(f'Digite o novo valor para {campo}: ')
-                    curriculo[campo] = novo_valor.capitalize()
-                    print('Currículo atualizado com sucesso!')
-                else:
-                    print('Campo inválido.')
-                break
+                print('\nNenhum nome selecionado\nVoltando ao menu principal')
         else:
-            print('Currículo não encontrado.')
-
+            print('\nNão há currículos cadastrados.')
         pass
 
-    if menu_principal == '5':
+    elif menu_principal == '5':
         # Função Excluir currículo
         if len(lista_curriculos) > 0:
             # Consulta
-            consultar_lista = str(input('Deseja consultar a lista ? (s/N)')).strip().lower()
+            consultar_lista = str(input('\nDeseja consultar a lista ? (s/N) ')).strip().lower()
+
             if 's' in consultar_lista:
                 if len(lista_curriculos) > 0:
                     print('\n\nLista de Currículos Cadastrados\n')
@@ -165,25 +200,25 @@ while True:
 
                 for i, curriculo in enumerate(lista_curriculos):
                     if nome_excluir in str(curriculo['nome']).lower():
-                        print('\nUsuário encontrado !')
+                        print('\nUsuário encontrado !\n')
+                        print(tabulate([curriculo], headers='keys', tablefmt='grid'))
                         deseja_excluir = str(input('\nDeseja excluir ? (S/n): '))
                         if deseja_excluir.strip().lower().startswith('n'):
                             break
                         else:
                             lista_curriculos.pop(i)
-                            print('\nUsuário excluído !\n')
+                            print('\nUsuário excluído !')
                             break
                     else:
                         print('\nNome não encontrado !!! \nRedirecionado para o menu.')
-                        break
-                            
-                            
+                        
+                break
         else:
             print('\n\nNão há curriculos cadastrados')
-            
+
 
     # Validação para vazio
-    if menu_principal == '':
+    elif menu_principal == '':
         sair = str(input('Precione 0 sair ou ENTER para continuar: '))
         if sair.strip().lower().startswith('0'):
             break
@@ -194,10 +229,10 @@ while True:
 
 
 
-print('Sistema encerrado')
+print('\nSistema encerrado')
 # print(lista_curriculos)
 # print(tabulate(lista_curriculos, headers='keys', tablefmt="grid"))
 
 
 
-#TODO exportar para um arquivo .xmlx
+#TODO exportar para um arquivo .xlxs
