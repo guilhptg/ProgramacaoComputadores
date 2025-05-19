@@ -207,21 +207,16 @@ while True:
         else:
             print('\n\nNão há curriculos cadastrados')
 
-
     # Validação para vazio
     elif menu_principal == '':
         sair = str(input('Precione 0 sair ou ENTER para continuar: '))
         if sair.strip().lower().startswith('0'):
             break
-
     else:
         continue
-
 
 print('\nSistema encerrado')
 # print(lista_curriculos)
 # print(tabulate(lista_curriculos, headers='keys', tablefmt="grid"))
-
-
 
 #TODO exportar para um arquivo .xlxs
